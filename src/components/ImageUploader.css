@@ -1,0 +1,57 @@
+.upload-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.drop-zone {
+    border: 2px dashed var(--color-border);
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    transition: all 0.2s ease;
+    background-color: #f1f5f9;
+    /* Requested background */
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.drop-zone:hover {
+    border-color: #693BF2;
+    background-color: rgba(0, 0, 0, 0.05);
+    /* Requested 5% opacity */
+}
+
+.drop-zone.dragging {
+    border-color: #693BF2;
+    background-color: rgba(0, 0, 0, 0.15);
+    transform: scale(1.01);
+}
+
+.upload-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    color: #693BF2;
+    /* Requested icon color */
+}
+
+.drop-zone:hover .upload-icon {
+    color: #5630c7;
+}
+
+.upload-text h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-primary);
+}
+
+.upload-text p {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.hidden-input {
+    display: none;
+}

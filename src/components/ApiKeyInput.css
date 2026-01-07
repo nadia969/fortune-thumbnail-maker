@@ -1,0 +1,70 @@
+.api-key-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    background-color: var(--color-bg-secondary);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+}
+
+.api-key-header {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: var(--color-bg-tertiary);
+    font-weight: 600;
+    user-select: none;
+}
+
+.api-key-header:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    /* 5% opacity black */
+}
+
+.api-key-body {
+    padding: 1rem;
+}
+
+.description {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+}
+
+.btn-save {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+.btn-clear {
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+.btn-clear:hover {
+    background-color: #ef4444;
+    color: white;
+    border-color: #ef4444;
+}

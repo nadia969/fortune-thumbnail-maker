@@ -1,0 +1,140 @@
+.editor-container {
+    width: 100%;
+    background-color: var(--color-bg-secondary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.editor-content {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.image-panel,
+.canvas-panel {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image-panel h3,
+.canvas-panel h3 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: var(--color-text-primary);
+}
+
+.image-preview-box {
+    background-color: var(--color-bg-tertiary);
+    border-radius: 8px;
+    padding: 1rem;
+    width: 100%;
+    max-width: 400px;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+}
+
+.image-preview-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.canvas-wrapper {
+    background-color: var(--color-bg-tertiary);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    position: relative;
+    /* For floating zoom controls */
+    border: 1px solid var(--color-border);
+    width: 100%;
+    overflow: visible;
+    /* To allow controls to render if they slightly overlap edge, or just standard behavior */
+}
+
+/* Ensure canvas is block */
+.editor-canvas {
+    display: block;
+    background-color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    cursor: default;
+    /* Size controlled by inline style in JSX */
+}
+
+.help-text {
+    margin-top: 1rem;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Floating Zoom Controls */
+.zoom-controls.floating {
+    position: absolute;
+    bottom: 50px;
+    /* Adjust based on help text height to place it near bottom right of image area */
+    right: 36px;
+    /* 20px from edge + padding offset approx */
+    /* Implementation detail: The 'image area' visual bottom is technically above the help text. 
+       If wrapper padding is 1rem (16px), and we want it 20px from the image edge...
+       Let's stick to absolute positioning relative to wrapper for stability. */
+    background: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-border);
+    z-index: 10;
+}
+
+.zoom-controls button {
+    background: white;
+    color: var(--color-text-primary);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+}
+
+.zoom-controls button:hover {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.zoom-controls span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: center;
+}
+
+.action-buttons {
+    margin-top: 2rem;
+    /* Increased margin for requested 20px shift (default was ~1rem, added more) */
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    justify-content: center;
+}
