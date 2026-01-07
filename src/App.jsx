@@ -44,11 +44,11 @@ function App() {
   return (
     <div className="app">
       <main className="app-main container">
-        <ApiKeyInput onKeyChange={setApiKey} />
-
         <div className="hero-text">
           <h1 style={{ color: '#000000' }}>전화운세 썸네일 메이커</h1>
         </div>
+
+        <ApiKeyInput onKeyChange={setApiKey} />
 
         <ImageUploader onImageSelect={handleImageSelect} />
 

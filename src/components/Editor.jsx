@@ -14,6 +14,10 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
     const [originalImageObj, setOriginalImageObj] = useState(null); // The high-res original
     const [compositeImage, setCompositeImage] = useState(null); // The high-res cutout
 
+    // Background Images
+    const [bgImageObj, setBgImageObj] = useState(null);
+    const [activeTab, setActiveTab] = useState('none'); // 'none', 'tarot', 'saju', 'sinjeom'
+
     // Transform state
     const [scale, setScale] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -28,11 +32,9 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
     useEffect(() => {
         if (removedBgImage) {
             const img = new Image();
-            img.crossOrigin = "anonymous"; // Important if images are from external URLs
+            img.crossOrigin = "anonymous";
             img.src = removedBgImage;
-            img.onload = () => {
-                setPersonImage(img);
-            };
+            img.onload = () => setPersonImage(img);
         }
     }, [removedBgImage]);
 
@@ -45,40 +47,45 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
         }
     }, [originalImage]);
 
+    // Load Background based on activeTab
+    useEffect(() => {
+        if (activeTab === 'none') {
+            setBgImageObj(null);
+            return;
+        }
+
+        const img = new Image();
+        img.src = `/bg_${activeTab}.jpg`; // Assumes images are in public folder: bg_tarot.jpg, bg_saju.jpg, bg_sinjeom.jpg
+        img.onload = () => setBgImageObj(img);
+    }, [activeTab]);
+
     // Generate High-Res Composite (Masking)
     useEffect(() => {
         if (personImage && originalImageObj) {
-            // Create a temporary canvas at ORIGINAL image resolution
             const tempCanvas = document.createElement('canvas');
             tempCanvas.width = originalImageObj.width;
             tempCanvas.height = originalImageObj.height;
             const tempCtx = tempCanvas.getContext('2d');
 
-            // 1. Draw High-Res Original
             tempCtx.drawImage(originalImageObj, 0, 0);
-
-            // 2. Apply Mask (Low-Res personImage scaled up)
             tempCtx.globalCompositeOperation = 'destination-in';
             tempCtx.drawImage(personImage, 0, 0, originalImageObj.width, originalImageObj.height);
 
-            // 3. Save as Image object for efficient drawing
             const compImg = new Image();
-            compImg.src = tempCanvas.toDataURL('image/png');
+            // compImg.src = tempCanvas.toDataURL('image/png'); // Can be heavy
+            // Optimized:
+            tempCanvas.toBlob(blob => {
+                compImg.src = URL.createObjectURL(blob);
+            });
+
             compImg.onload = () => {
                 setCompositeImage(compImg);
-
-                // Set initial scale to fit based on the NEW composite dimensions
-                // Only if scale hasn't been touched yet? Or always reset?
-                // Better to set initial scale only once.
-                // We'll trust the user to zoom if needed, or set default.
-                // Default fit:
                 if (scale === 1) {
                     const fitScale = (CANVAS_HEIGHT * 0.8) / compImg.height;
                     setScale(fitScale);
                 }
             };
         } else if (personImage && !originalImageObj) {
-            // Fallback if original didn't load for some reason (rare)
             setCompositeImage(personImage);
             if (scale === 1) {
                 const fitScale = (CANVAS_HEIGHT * 0.8) / personImage.height;
@@ -89,15 +96,25 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
 
 
     // Draw Function
-    const drawCanvas = useCallback((ctx, img, currentScale, currentPos, showOverlay = true) => {
+    const drawCanvas = useCallback((ctx, img, currentScale, currentPos, showOverlay = true, background = null) => {
         // Clear canvas
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        // Ensure smoothing is high quality
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
 
+        // 1. Draw Background (if exists)
+        if (background) {
+            ctx.save();
+            // Background covers the canvas? stretch or fit? 
+            // Usually backgrounds are designed for the ratio. 
+            // Let's assume cover/stretch to canvas size.
+            ctx.drawImage(background, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            ctx.restore();
+        }
+
         if (!img) return;
 
+        // 2. Draw Person
         ctx.save();
         const cx = CANVAS_WIDTH / 2;
         const cy = CANVAS_HEIGHT / 2;
@@ -109,7 +126,7 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
 
         ctx.restore();
 
-        // Draw Transform Controls (Overlay)
+        // 3. Draw UI
         if (showOverlay) {
             const boxCenterX = cx + currentPos.x;
             const boxCenterY = cy + currentPos.y;
@@ -121,22 +138,20 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
             const boxRight = boxCenterX + boxWidth / 2;
             const boxBottom = boxCenterY + boxHeight / 2;
 
-            // Draw selection border
             ctx.strokeStyle = '#693BF2';
-            ctx.lineWidth = 4; // Thicker for high res
+            ctx.lineWidth = 4;
             ctx.strokeRect(boxLeft, boxTop, boxWidth, boxHeight);
 
-            // Draw resize handles (corners)
-            const handleSize = 50; // Larger for high res
+            const handleSize = 50;
             ctx.fillStyle = 'white';
             ctx.strokeStyle = '#693BF2';
             ctx.lineWidth = 3;
 
             const handles = [
-                { x: boxLeft, y: boxTop }, // TL
-                { x: boxRight, y: boxTop }, // TR
-                { x: boxRight, y: boxBottom }, // BR
-                { x: boxLeft, y: boxBottom }, // BL
+                { x: boxLeft, y: boxTop },
+                { x: boxRight, y: boxTop },
+                { x: boxRight, y: boxBottom },
+                { x: boxLeft, y: boxBottom },
             ];
 
             handles.forEach(h => {
@@ -153,10 +168,9 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        // Prefer compositeImage (High Res), fallback to personImage
         const imgToDraw = compositeImage || personImage;
-        drawCanvas(ctx, imgToDraw, scale, position, true);
-    }, [compositeImage, personImage, scale, position, drawCanvas]);
+        drawCanvas(ctx, imgToDraw, scale, position, true, bgImageObj);
+    }, [compositeImage, personImage, scale, position, bgImageObj, drawCanvas]);
 
 
     const getCanvasPoint = (e) => {
@@ -171,7 +185,7 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
     };
 
     const isOnHandle = (px, py, handleX, handleY) => {
-        const handleSize = 80; // Hit area
+        const handleSize = 80;
         return Math.abs(px - handleX) < handleSize && Math.abs(py - handleY) < handleSize;
     };
 
@@ -218,7 +232,6 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
 
         const p = getCanvasPoint(e);
         const dx = p.x - dragStart.x;
-        // const dy = p.y - dragStart.y; // Unused for uniform scale X-driver
 
         if (interactionMode === 'pan') {
             const dy = p.y - dragStart.y;
@@ -228,8 +241,6 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
             });
         } else if (interactionMode && interactionMode.startsWith('resize')) {
             const imgW = img.width;
-
-            // Directions
             let dirX = 1;
             if (interactionMode === 'resize-br') { dirX = 1; }
             if (interactionMode === 'resize-bl') { dirX = -1; }
@@ -239,13 +250,7 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
             const relativeChangeX = (dx * dirX) / (imgW * initialTransform.scale);
             const newScale = Math.max(0.1, initialTransform.scale * (1 + relativeChangeX));
 
-            // For center-anchored scaling (simplest UX without shift):
             setScale(newScale);
-
-            // Note: If we want true corner anchoring, we need position shift math.
-            // But center-scale is often acceptable or even preferred in simple editors.
-            // Given the complexity of implementing robust anchor-shift in this coordinate system
-            // without matrix math libraries, sticking to center-scale is safer to avoid "jumping".
         }
     };
 
@@ -260,19 +265,20 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
         const ctx = canvas.getContext('2d');
         const img = compositeImage || personImage;
 
-        // 1. Draw without UI
-        drawCanvas(ctx, img, scale, position, false);
+        // Draw for download: TRANSPARENT background (pass null instead of bgImageObj)
+        // User requested preview tabs, but didn't explicitly ask to change download behavior.
+        // Usually preview is just for checking fit.
+        // I will keep it transparent as per previous heavy reinforcement.
+        drawCanvas(ctx, img, scale, position, false, null);
 
-        // 2. Export
         const link = document.createElement('a');
         const downloadName = fileName ? `${fileName.split('.')[0]}.png` : 'fortune-thumbnail.png';
         link.download = downloadName;
-        // High Quality export
         link.href = canvas.toDataURL('image/png', EXPORT_QUALITY);
         link.click();
 
-        // 3. Restore UI
-        drawCanvas(ctx, img, scale, position, true);
+        // Restore UI (with background if active)
+        drawCanvas(ctx, img, scale, position, true, bgImageObj);
     };
 
     return (
@@ -288,7 +294,32 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
 
                 {/* Right Side: Canvas Editor */}
                 <div className="canvas-panel">
-                    <h3>썸네일 편집</h3>
+                    <div className="category-tabs">
+                        <button
+                            className={`tab-btn ${activeTab === 'none' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('none')}
+                        >
+                            배경 없음
+                        </button>
+                        <button
+                            className={`tab-btn ${activeTab === 'tarot' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('tarot')}
+                        >
+                            타로
+                        </button>
+                        <button
+                            className={`tab-btn ${activeTab === 'saju' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('saju')}
+                        >
+                            사주
+                        </button>
+                        <button
+                            className={`tab-btn ${activeTab === 'sinjeom' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('sinjeom')}
+                        >
+                            신점
+                        </button>
+                    </div>
 
                     <div className="canvas-wrapper">
                         <canvas
@@ -304,7 +335,6 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
                         />
                         <p className="help-text">이미지 모서리를 드래그하여 크기 조절, 중앙을 드래그하여 이동</p>
 
-                        {/* Floating Zoom Controls tied to this wrapper */}
                         <div className="zoom-controls floating">
                             <button onClick={() => setScale(s => s - 0.05)}>-</button>
                             <span>{(scale * 100).toFixed(0)}%</span>
@@ -313,7 +343,7 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
                     </div>
 
                     <div className="action-buttons">
-                        <button className="btn-primary" onClick={handleDownload}>고해상도 다운로드</button>
+                        <button className="btn-primary" onClick={handleDownload}>고해상도 다운로드 (투명)</button>
                     </div>
                 </div>
             </div>
