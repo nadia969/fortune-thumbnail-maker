@@ -3,7 +3,7 @@ import './ApiKeyInput.css';
 
 const ApiKeyInput = ({ onKeyChange }) => {
     const [apiKey, setApiKey] = useState('');
-    const [isVisible, setIsVisible] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         const storedKey = localStorage.getItem('removebg_api_key');
@@ -16,36 +16,42 @@ const ApiKeyInput = ({ onKeyChange }) => {
     const handleSave = () => {
         localStorage.setItem('removebg_api_key', apiKey);
         onKeyChange(apiKey);
-        alert('API Key가 저장되었습니다.');
-    };
-
-    const handleClear = () => {
-        localStorage.removeItem('removebg_api_key');
-        setApiKey('');
-        onKeyChange('');
+        setIsOpen(false); // Optional: close after saving? User didn't ask, but it's nice. Let's keep it open or just notify.
+        // Actually, let's just save.
+        alert("API Key가 저장되었습니다.");
     };
 
     return (
         <div className="api-key-container">
-            <div className="api-key-header" onClick={() => setIsVisible(!isVisible)}>
-                <span>🔑 Remove.bg API 설정</span>
-                <span className="toggle-icon">{isVisible ? '▲' : '▼'}</span>
-            </div>
+            <button
+                className={`api-toggle-btn ${isOpen ? 'open' : ''}`}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <div className="btn-content">
+                    <img src="/icon_moon.png" alt="icon" className="ui-icon-moon" />
+                    <span>Remove.bg API 설정</span>
+                </div>
+                <img src="/icon_arrow.png" alt="toggle" className="ui-icon-arrow" />
+            </button>
 
-            {isVisible && (
-                <div className="api-key-body">
+            {isOpen && (
+                <div className="api-input-wrapper">
                     <p className="description">
-                        고품질 배경 제거를 위해 <a href="https://www.remove.bg/api" target="_blank" rel="noreferrer">remove.bg API Key</a>가 필요합니다.
+                        Remove.bg 웹사이트에서 발급받은 API Key를 입력해주세요.
+                        <br />
+                        <a href="https://www.remove.bg/api#remove-background" target="_blank" rel="noreferrer">
+                            API Key 발급받기
+                        </a>
                     </p>
                     <div className="input-group">
                         <input
                             type="password"
+                            placeholder="API Key 입력"
                             value={apiKey}
                             onChange={(e) => setApiKey(e.target.value)}
-                            placeholder="API Key를 입력하세요"
+                            className="api-input"
                         />
-                        <button onClick={handleSave} className="btn-save">저장</button>
-                        <button onClick={handleClear} className="btn-clear">삭제</button>
+                        <button className="save-btn" onClick={handleSave}>저장</button>
                     </div>
                 </div>
             )}

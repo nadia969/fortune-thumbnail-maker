@@ -44,8 +44,12 @@ function App() {
   return (
     <div className="app">
       <main className="app-main container">
+        <div className="brand-logo">
+          <img src="/logo_kmong.png" alt="kmong 전화운세" className="logo-img" />
+        </div>
+
         <div className="hero-text">
-          <h1 style={{ color: '#000000' }}>전화운세 썸네일 메이커</h1>
+          <h1 style={{ color: '#000000' }}>전화운세 상담사 썸네일 메이커</h1>
         </div>
 
         <ApiKeyInput onKeyChange={setApiKey} />

@@ -1,175 +1,259 @@
+/* Editor Container */
 .editor-container {
     width: 100%;
-    background-color: var(--color-bg-secondary);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-top: 2rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-top: 40px;
+    /* Requested 40px spacing from drag area */
+    display: flex;
+    justify-content: center;
 }
 
 .editor-content {
     display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
+    gap: 40px;
+    /* Space between columns */
+    width: auto;
+    justify-content: center;
 }
 
-.image-panel,
-.canvas-panel {
-    flex: 1;
-    min-width: 300px;
+.editor-column {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 630px;
+    /* Fixed width per spec */
+    flex-shrink: 0;
+    /* Prevent shrinking on small screens */
 }
 
-.image-panel h3,
-.canvas-panel h3 {
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-    color: var(--color-text-primary);
+/* Panels */
+.panel {
+    width: 630px;
+    height: 790px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    /* Ensure padding doesn't add to width */
 }
 
 .image-preview-box {
-    background-color: var(--color-bg-tertiary);
-    border-radius: 8px;
-    padding: 1rem;
-    width: 100%;
-    max-width: 400px;
-    height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border: 1px solid var(--color-border);
+    background-color: #F7F8FA;
+    /* Left Panel BG */
 }
 
+.editor-box {
+    background-color: #F5F3FF;
+    /* Right Panel BG */
+}
+
+.panel-title {
+    font-size: 20px;
+    /* Bigger title */
+    font-weight: 700;
+    color: #111;
+    margin-top: 24px;
+    /* Title below panel */
+    margin-bottom: 0;
+}
+
+/* Left Panel: Original Image */
+/* .left-panel is removed as its styles are integrated into .panel and .image-preview-box */
 
 .image-preview-box img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+    background: white;
+    /* Image itself might need a bg if transparent */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    /* Subtle shadow for image */
+}
+
+/* Right Panel: Editor */
+/* .right-panel is removed as its styles are integrated into .panel and .editor-box */
+
+/* Tabs */
+.tabs-wrapper {
+    width: 630px;
+    /* Match panel width for precise numbering/centering relative to panel */
+    display: flex;
+    justify-content: center;
+    /* Center Aligned */
+    margin-bottom: 32px;
+    /* 32px Gap to Editor */
+    height: 48px;
+    /* Slightly taller to fit tabs + border */
+    position: relative;
+    /* Ensure it creates a context */
+    z-index: 20;
+    /* High z-index to be clickable */
 }
 
 .category-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    background: var(--color-bg-tertiary);
-    padding: 0.5rem;
+    display: inline-flex;
+    /* Fit to content */
+    gap: 8px;
+    background: #f1f5f9;
+    padding: 6px;
+    /* Increased padding slightly for look */
     border-radius: 8px;
-    border: 1px solid var(--color-border);
+    border: 1px solid #E9EDF4;
+    height: fit-content;
+    position: relative;
+    z-index: 21;
+    /* even higher */
+    pointer-events: auto;
+    /* Force events */
 }
 
 .tab-btn {
-    flex: 1;
-    padding: 0.5rem 1rem;
+    width: 64px;
+    /* Requested Width */
+    height: 40px;
+    /* Requested Height */
     border: none;
     background: transparent;
-    color: var(--color-text-secondary);
-    font-weight: 600;
+    color: #495057;
+    font-weight: 500;
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s;
     font-family: inherit;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
 }
 
 .tab-btn:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    color: var(--color-text-primary);
+    background-color: rgba(0, 0, 0, 0.04);
+    /* Requested Hover Style */
+    color: #111;
 }
 
 .tab-btn.active {
-    background-color: white;
-    color: var(--color-primary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    color: #111;
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #693BF2;
 }
 
+/* Canvas Area */
 .canvas-wrapper {
-    background-color: var(--color-bg-tertiary);
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
+    /* The canvas should be centered in the panel. The panel is Flex Center. */
     position: relative;
-    /* For floating zoom controls */
-    border: 1px solid var(--color-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Canvas specific visual size logic is inline style, but wrapper ensures centering */
+    background-color: transparent;
+    /* Wrapper itself transparent on purple bg?
+       Actually, image shows the canvas is on the panel.
+       The 'void' area is #f1f5f9 in our code.
+       Let's keep the canvas itself (void) as designed, usually it has its own bg.
+       Current code sets ctx.fillStyle = '#f1f5f9' inside canvas.
+    */
+    border-radius: 0;
+    padding: 0;
     width: 100%;
-    overflow: visible;
-    /* To allow controls to render if they slightly overlap edge, or just standard behavior */
+    /* overflow: hidden; -- Infinite canvas needs to capture events, but visually we crop to panel?
+       Actually, user said "drag outside". Clipping prevents seeing outside.
+       Let's keep it clipped to the panel area or wrapper area to avoid messing up layout.
+    */
+    border: none;
 }
 
-/* Ensure canvas is block */
 .editor-canvas {
     display: block;
-    background-color: white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    cursor: default;
-    /* Size controlled by inline style in JSX */
+    /* Canvas background logic is inside JS (drawCanvas) */
 }
 
-.help-text {
-    margin-top: 1rem;
-    color: var(--color-text-secondary);
-    font-size: 0.9rem;
-}
-
-/* Floating Zoom Controls */
-.zoom-controls.floating {
+.ui-overlay-box {
     position: absolute;
-    bottom: 50px;
-    /* Adjust based on help text height to place it near bottom right of image area */
-    right: 36px;
-    /* 20px from edge + padding offset approx */
-    /* Implementation detail: The 'image area' visual bottom is technically above the help text. 
-       If wrapper padding is 1rem (16px), and we want it 20px from the image edge...
-       Let's stick to absolute positioning relative to wrapper for stability. */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    /* border: 1px dashed #ddd; Optional visual guide */
+}
+
+/* Zoom Controls - Integrated into Panel */
+.zoom-controls-panel {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
     background: white;
-    padding: 0.25rem 0.5rem;
+    padding: 4px 8px;
     border-radius: 20px;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--color-border);
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #E9EDF4;
     z-index: 10;
 }
 
-.zoom-controls button {
+.zoom-controls-panel button {
     background: white;
-    color: var(--color-text-primary);
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
+    color: #5C637F;
+    width: 20px;
+    height: 20px;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-    border: 1px solid var(--color-border);
+    font-size: 16px;
     cursor: pointer;
-    line-height: 1;
     padding: 0;
 }
 
-.zoom-controls button:hover {
-    background: var(--color-bg-secondary);
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-}
-
-.zoom-controls span {
-    font-size: 0.9rem;
+.zoom-controls-panel span {
+    font-size: 12px;
     font-weight: 600;
-    min-width: 40px;
+    color: #111;
+    min-width: 32px;
     text-align: center;
 }
 
+/* Help Text */
+.help-text-bottom {
+    margin-top: 12px;
+    /* 12px Gap */
+    font-size: 14px;
+    color: #5C637F;
+    text-align: center;
+}
+
+/* Action Buttons */
 .action-buttons {
-    margin-top: 2rem;
-    /* Increased margin for requested 20px shift (default was ~1rem, added more) */
+    margin-top: 32px;
+    /* 32px Gap from Title? or Panel? User: "32px away from image editor" */
+    /* If title is also there, maybe button is further?
+       Let's put 32px margin top on buttons. Title margin top is 24px. */
     display: flex;
     gap: 1rem;
     width: 100%;
     justify-content: center;
+}
+
+.btn-primary {
+    background-color: #693BF2;
+    color: white;
+    width: 100%;
+    /* Full width button? Or fixed? Usually buttons are auto. Let's make it nice. */
+    max-width: 200px;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #5630c9;
 }

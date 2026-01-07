@@ -1,37 +1,102 @@
 .api-key-container {
     width: 100%;
     max-width: 600px;
-    margin: 0 auto 2rem auto;
-    background-color: var(--color-bg-secondary);
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid var(--color-border);
+    margin: 0 auto 40px auto;
 }
 
-.api-key-header {
-    padding: 1rem;
+.api-toggle-btn {
+    width: 100%;
+    background-color: #F7F8FA;
+    /* Requested BG */
+    border: 1px solid #E9EDF4;
+    /* Requested Border */
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    background-color: var(--color-bg-tertiary);
-    font-weight: 600;
-    user-select: none;
+    font-family: "Pretendard", sans-serif;
+    color: #5C637F;
+    /* Requested Color */
+    font-size: 20px;
+    /* Requested Size */
+    font-weight: 500;
+    transition: all 0.2s;
 }
 
-.api-key-header:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    /* 5% opacity black */
+.api-toggle-btn:hover {
+    background-color: #EDEEF0;
+    /* Approx #F7F8FA + 4% Black */
+    /* Alternatively, if they mean specifically opacity */
+    /* background-color: color-mix(in srgb, #000000 4%, #F7F8FA); */
 }
 
-.api-key-body {
-    padding: 1rem;
+.btn-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.ui-icon-moon {
+    width: 20px;
+    /* Requested Size */
+    height: 20px;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.ui-icon-arrow {
+    width: 20px;
+    /* Requested Size */
+    height: 20px;
+    object-fit: contain;
+    transition: transform 0.2s;
+    opacity: 0.4;
+}
+
+.api-toggle-btn.open .ui-icon-arrow {
+    transform: rotate(180deg);
+}
+
+.api-input-wrapper {
+    background-color: #f1f5f9;
+    /* Requested BG */
+    border: 1px solid #f1f3f5;
+    border-top: none;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 1.5rem;
+    margin-top: -6px;
+    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Fix border radius when open */
+.api-toggle-btn.open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: #f1f5f9;
+    /* Match wrapper to blend */
+    border-color: #E9EDF4;
+    /* Keep border consistency */
 }
 
 .description {
     font-size: 0.9rem;
-    color: var(--color-text-secondary);
+    color: #5C637F;
     margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.description a {
+    color: #693BF2;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.description a:hover {
+    text-decoration: underline;
+    /* Requested Hover Underline */
 }
 
 .input-group {
@@ -39,32 +104,36 @@
     gap: 0.5rem;
 }
 
-.input-group input {
+.api-input {
     flex: 1;
-    padding: 0.5rem;
-    border-radius: 4px;
-    border: 1px solid var(--color-border);
-    background-color: var(--color-bg-primary);
-    color: var(--color-text-primary);
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: #ffffff;
+    /* Requested White Input */
 }
 
-.btn-save {
-    background-color: var(--color-primary);
+.api-input:focus {
+    outline: none;
+    border-color: #693BF2;
+    box-shadow: 0 0 0 3px rgba(105, 59, 242, 0.1);
+}
+
+.save-btn {
+    padding: 0 1.5rem;
+    background-color: #333;
+    /* Dark button */
     color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
 }
 
-.btn-clear {
-    background-color: transparent;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-}
-
-.btn-clear:hover {
-    background-color: #ef4444;
-    color: white;
-    border-color: #ef4444;
+.save-btn:hover {
+    background-color: #000;
 }

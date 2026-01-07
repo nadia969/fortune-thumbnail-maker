@@ -73,13 +73,10 @@ const ImageUploader = ({ onImageSelect }) => {
                     onChange={handleFileInput}
                 />
 
-                <svg className="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                </svg>
+                <img src="/icon_gallery.png" alt="Upload" className="upload-icon-img" />
 
                 <div className="upload-text">
-                    <h3>사진을 여기에 놓으세요</h3>
-                    <p>또는 클릭하여 파일을 선택하세요</p>
+                    <h3>파일을 드래그하거나<br />클릭해서 첨부해 주세요</h3>
                 </div>
             </div>
         </div>

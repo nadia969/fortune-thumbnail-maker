@@ -5,51 +5,57 @@
 }
 
 .drop-zone {
-    border: 2px dashed var(--color-border);
-    border-radius: 12px;
-    padding: 3rem;
+    border: 1px dashed #D0D5DD;
+    /* Requested 1px Border */
+    border-radius: 8px;
+    /* Slightly less rounded */
+    padding: 2.5rem;
     text-align: center;
     transition: all 0.2s ease;
-    background-color: #f1f5f9;
-    /* Requested background */
+    background-color: #F7F8FA;
+    /* Requested BG */
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    color: #868e96;
 }
 
 .drop-zone:hover {
     border-color: #693BF2;
-    background-color: rgba(0, 0, 0, 0.05);
-    /* Requested 5% opacity */
+    /* Requested Hover Border */
+    background-color: #EDEEF0;
+    /* Approx #F7F8FA + 4% Black */
 }
 
 .drop-zone.dragging {
     border-color: #693BF2;
-    background-color: rgba(0, 0, 0, 0.15);
-    transform: scale(1.01);
+    background-color: #EDEEF0;
 }
 
-.upload-icon {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 1rem;
-    color: #693BF2;
-    /* Requested icon color */
+.upload-icon-img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 12px;
+    /* Requested 12px spacing */
+    object-fit: contain;
+    transition: opacity 0.2s;
+    opacity: 0.5;
 }
 
-.drop-zone:hover .upload-icon {
-    color: #5630c7;
+.drop-zone:hover .upload-icon-img {
+    opacity: 1;
 }
 
 .upload-text h3 {
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+    color: #495057;
 }
 
 .upload-text p {
-    color: var(--color-text-secondary);
-    font-size: 0.9rem;
+    color: #868e96;
+    font-size: 0.85rem;
 }
 
 .hidden-input {
