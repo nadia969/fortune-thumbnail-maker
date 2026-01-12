@@ -55,10 +55,12 @@ const ImageCompressor = () => {
         setIsCompressing(true);
 
         const options = {
-            maxSizeMB: 10,
+            maxSizeMB: 0.5, // 약 80% 압축 목표
+            maxWidthOrHeight: 1920, // 최대 해상도 제한 (Full HD)
             useWebWorker: true,
-            initialQuality: compressionQuality,
-            alwaysKeepResolution: true,
+            initialQuality: compressionQuality * 0.8, // 품질 슬라이더의 80% 적용
+            alwaysKeepResolution: false, // 필요시 해상도 조정 허용
+            fileType: 'image/jpeg', // JPEG로 변환 (PNG보다 용량 작음)
         };
 
         for (let i = 0; i < files.length; i++) {
