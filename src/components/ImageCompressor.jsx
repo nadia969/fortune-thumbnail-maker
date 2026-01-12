@@ -54,23 +54,29 @@ const ImageCompressor = () => {
         if (files.length === 0) return;
         setIsCompressing(true);
 
-        const options = {
-            maxSizeMB: 0.5, // 약 80% 압축 목표
-            maxWidthOrHeight: 1920, // 최대 해상도 제한 (Full HD)
-            useWebWorker: true,
-            initialQuality: compressionQuality * 0.8, // 품질 슬라이더의 80% 적용
-            alwaysKeepResolution: false, // 필요시 해상도 조정 허용
-            fileType: 'image/jpeg', // JPEG로 변환 (PNG보다 용량 작음)
-        };
-
         for (let i = 0; i < files.length; i++) {
             if (files[i].status === 'completed') continue;
 
             try {
                 const currentFileId = files[i].id;
+                const currentFile = files[i].file;
+
+                // PNG 파일인지 확인
+                const isPNG = currentFile.type === 'image/png';
+
+                // PNG는 투명도 유지를 위해 원본 포맷 유지, 나머지는 JPEG로 변환
+                const options = {
+                    maxSizeMB: 0.5,
+                    maxWidthOrHeight: 1920,
+                    useWebWorker: true,
+                    initialQuality: compressionQuality * 0.8,
+                    alwaysKeepResolution: false,
+                    fileType: isPNG ? 'image/png' : 'image/jpeg', // PNG는 PNG로 유지
+                };
+
                 setFiles(prev => prev.map(f => f.id === currentFileId ? { ...f, status: 'compressing' } : f));
 
-                const compressedFile = await imageCompression(files[i].file, {
+                const compressedFile = await imageCompression(currentFile, {
                     ...options,
                     onProgress: (p) => {
                         setFiles(prev => prev.map(f => f.id === currentFileId ? { ...f, progress: p } : f));
