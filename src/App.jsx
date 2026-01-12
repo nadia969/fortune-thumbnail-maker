@@ -1,77 +1,45 @@
 import { useState } from 'react';
 import './App.css';
-import ImageUploader from './components/ImageUploader';
-import Editor from './components/Editor';
-import ApiKeyInput from './components/ApiKeyInput';
-import { processImage } from './utils/imageProcessing';
+import ThumbnailMaker from './components/ThumbnailMaker';
+import ImageCompressor from './components/ImageCompressor';
 
 function App() {
-  const [originalImage, setOriginalImage] = useState(null);
-  const [processedImage, setProcessedImage] = useState(null);
-  const [fileName, setFileName] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [apiKey, setApiKey] = useState('');
+  const [activeTool, setActiveTool] = useState(() => localStorage.getItem('activeTool') || 'thumbnail');
 
-  const handleImageSelect = async (imageUrl, name) => {
-    if (!apiKey) {
-      alert("먼저 API Key를 설정해주세요.");
-      return;
-    }
-
-    setOriginalImage(imageUrl);
-    setFileName(name);
-    setIsProcessing(true);
-
-    // Start background removal immediately
-    try {
-      const resultUrl = await processImage(imageUrl, apiKey);
-      setProcessedImage(resultUrl);
-    } catch (error) {
-      console.error(error);
-      alert(`오류 발생: ${error.message}`);
-      setOriginalImage(null);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const handleReset = () => {
-    setOriginalImage(null);
-    setProcessedImage(null);
-    setFileName('');
+  const handleToolChange = (tool) => {
+    setActiveTool(tool);
+    localStorage.setItem('activeTool', tool);
   };
 
   return (
-    <div className="app">
-      <main className="app-main container">
-        <div className="brand-logo">
-          <img src="/logo_kmong.png" alt="kmong 전화운세" className="logo-img" />
+    <div className="main-app-container">
+      {/* Global Tool Navigation */}
+      <nav className="tool-nav">
+        <div className="tool-toggle">
+          <div className={`toggle-slider ${activeTool}`}></div>
+          <button
+            className={`tool-toggle-btn ${activeTool === 'thumbnail' ? 'active' : ''}`}
+            onClick={() => handleToolChange('thumbnail')}
+          >
+            썸네일 메이커
+          </button>
+          <button
+            className={`tool-toggle-btn ${activeTool === 'compressor' ? 'active' : ''}`}
+            onClick={() => handleToolChange('compressor')}
+          >
+            이미지 용량 줄이기
+          </button>
         </div>
+      </nav>
 
-        <div className="hero-text">
-          <h1 style={{ color: '#000000' }}>전화운세 상담사 썸네일 메이커</h1>
-        </div>
-
-        <ApiKeyInput onKeyChange={setApiKey} />
-
-        <ImageUploader onImageSelect={handleImageSelect} />
-
-        {isProcessing && (
-          <div className="loading-state">
-            <div className="spinner"></div>
-            <p>배경 제거 중입니다...</p>
-          </div>
+      {/* Tool Content */}
+      <div className="tool-view">
+        {activeTool === 'thumbnail' ? (
+          <ThumbnailMaker />
+        ) : (
+          <ImageCompressor />
         )}
-
-        {originalImage && !isProcessing && processedImage && (
-          <Editor
-            originalImage={originalImage}
-            removedBgImage={processedImage}
-            fileName={fileName}
-            onReset={handleReset}
-          />
-        )}
-      </main>
+      </div>
     </div>
   )
 }

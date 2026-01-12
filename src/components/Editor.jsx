@@ -92,9 +92,6 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
             tempCtx.drawImage(personImage, 0, 0, originalImageObj.width, originalImageObj.height);
 
             const compImg = new Image();
-            tempCanvas.toBlob(blob => {
-                compImg.src = URL.createObjectURL(blob);
-            });
             compImg.onload = () => {
                 setCompositeImage(compImg);
                 if (scale === 1) {
@@ -102,10 +99,12 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
                     setScale(fitScale);
                 }
             };
-        } else if (personImage && !originalImageObj) {
-            setCompositeImage(personImage);
+            tempCanvas.toBlob(blob => {
+                compImg.src = URL.createObjectURL(blob);
+            });
+        } else if (!personImage && originalImageObj) {
             if (scale === 1) {
-                const fitScale = (OUTPUT_HEIGHT * 0.8) / personImage.height;
+                const fitScale = (OUTPUT_HEIGHT * 0.8) / originalImageObj.height;
                 setScale(fitScale);
             }
         }
@@ -225,9 +224,9 @@ const Editor = ({ originalImage, removedBgImage, fileName, onReset }) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        const imgToDraw = compositeImage || personImage;
+        const imgToDraw = compositeImage || personImage || originalImageObj;
         drawCanvas(ctx, imgToDraw, scale, position, true, bgImageObj);
-    }, [compositeImage, personImage, scale, position, bgImageObj, drawCanvas]);
+    }, [compositeImage, personImage, originalImageObj, scale, position, bgImageObj, drawCanvas]);
 
 
     const getCanvasPoint = (e) => {

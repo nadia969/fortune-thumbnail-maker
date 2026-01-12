@@ -241,10 +241,9 @@
 }
 
 .btn-primary {
-    background-color: #693BF2;
-    color: white;
+    background-color: #693BF2 !important;
+    color: white !important;
     width: 100%;
-    /* Full width button? Or fixed? Usually buttons are auto. Let's make it nice. */
     max-width: 200px;
     padding: 14px 24px;
     border-radius: 8px;
@@ -252,6 +251,7 @@
     font-size: 16px;
     border: none;
     cursor: pointer;
+    display: inline-block;
 }
 
 .btn-primary:hover {

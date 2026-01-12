@@ -34,7 +34,7 @@
   justify-content: center;
 }
 
-.logo-img {
+.brand-logo img {
   width: 196px;
   height: 32px;
   object-fit: contain;
@@ -92,4 +92,77 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Global Tool Navigation */
+.main-app-container {
+  min-height: 100vh;
+  background-color: #fbfcfd;
+  padding-bottom: 100px;
+}
+
+.tool-nav {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.tool-toggle {
+  display: flex;
+  background-color: #f1f5f9;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  position: relative;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  width: calc(50% - 4px);
+  background-color: #000000;
+  border-radius: 999px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+.toggle-slider.compressor {
+  transform: translateX(100%);
+}
+
+.tool-toggle-btn {
+  position: relative;
+  z-index: 2;
+  padding: 0.6rem 1.75rem;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: color 0.3s ease;
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.tool-toggle-btn.active {
+  color: #ffffff;
+}
+
+.tool-view {
+  padding-top: 60px;
 }
