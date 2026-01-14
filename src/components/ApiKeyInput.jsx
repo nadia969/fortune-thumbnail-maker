@@ -44,13 +44,27 @@ const ApiKeyInput = ({ onKeyChange }) => {
                         </a>
                     </p>
                     <div className="input-group">
-                        <input
-                            type="password"
-                            placeholder="API Key 입력"
-                            value={apiKey}
-                            onChange={(e) => setApiKey(e.target.value)}
-                            className="api-input"
-                        />
+                        <div className="input-container">
+                            <input
+                                type="password"
+                                placeholder="API Key 입력"
+                                value={apiKey}
+                                onChange={(e) => setApiKey(e.target.value)}
+                                className="api-input"
+                            />
+                            {apiKey && (
+                                <button
+                                    className="clear-btn"
+                                    onClick={() => setApiKey('')}
+                                    title="입력 지우기"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            )}
+                        </div>
                         <button className="save-btn" onClick={handleSave}>저장</button>
                     </div>
                 </div>

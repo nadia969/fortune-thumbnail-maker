@@ -104,15 +104,43 @@
     gap: 0.5rem;
 }
 
-.api-input {
+.input-container {
     flex: 1;
-    padding: 0.75rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.api-input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+    /* Right padding for clear button */
     border: 1px solid #dee2e6;
     border-radius: 6px;
     font-size: 1rem;
     font-family: inherit;
     background-color: #ffffff;
     /* Requested White Input */
+}
+
+.clear-btn {
+    position: absolute;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.clear-btn:hover {
+    background-color: #f1f5f9;
+    color: #4b5563;
 }
 
 .api-input:focus {

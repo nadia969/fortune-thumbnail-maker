@@ -4,11 +4,11 @@ import ThumbnailMaker from './components/ThumbnailMaker';
 import ImageCompressor from './components/ImageCompressor';
 
 function App() {
-  const [activeTool, setActiveTool] = useState(() => localStorage.getItem('activeTool') || 'thumbnail');
+  const [activeTool, setActiveTool] = useState('thumbnail');
 
   const handleToolChange = (tool) => {
     setActiveTool(tool);
-    localStorage.setItem('activeTool', tool);
+    localStorage.setItem('activeTool', tool); // We can keep writing to it, or remove it. Let's keep writing just in case they want it back later, but reading is disabled.
   };
 
   return (
