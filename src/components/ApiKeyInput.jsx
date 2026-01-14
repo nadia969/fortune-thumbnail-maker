@@ -51,6 +51,11 @@ const ApiKeyInput = ({ onKeyChange }) => {
                                 value={apiKey}
                                 onChange={(e) => setApiKey(e.target.value)}
                                 className="api-input"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSave();
+                                    }
+                                }}
                             />
                             {apiKey && (
                                 <button
